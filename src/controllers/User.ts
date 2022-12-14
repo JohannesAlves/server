@@ -14,6 +14,20 @@ interface ISignupRequestBody {
 export const SignupController = async (request: Request, response: Response) => {
     const { cpf, password, fullname }: ISignupRequestBody = request.body;
 
+    try {
+        const userAlreadyExist = await prisma.user.findUnique({
+            where: {
+                cpf,
+            },
+        });
+
+        if (userAlreadyExist) {
+            return response.status(401).json({ signup: false, message: "user already exist" });
+        }
+    } catch (error) {
+        throw new Error();
+    }
+
     if (!isValidCPF(cpf)) {
         return response.status(401).json({ signup: false, message: "Invalid CPF" });
     }
