@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { isValidCPF } from "../utils/isValidCPF";
 
 const prisma = new PrismaClient();
 
@@ -11,6 +12,10 @@ interface ISignupRequestBody {
 
 export const SignupController = async (request: Request, response: Response) => {
     const { cpf, password, fullname }: ISignupRequestBody = request.body;
+
+    if (!isValidCPF(cpf)) {
+        return response.status(401).json({ signup: false, message: "Invalid CPF" });
+    }
 
     if (!cpf || !password || !fullname) {
         return response.status(401).json({ signup: false, message: "U can't send data empty to signup." });
