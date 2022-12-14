@@ -22,7 +22,7 @@ model User {
 
 model Account {
   id        Int     @id @unique @default(autoincrement())
-  accountId String  @unique
+  accountId String  @unique @default(cuid())
   balance   Decimal
   userId    String  @unique
 
