@@ -23,9 +23,11 @@ export const SignupController = async (request: Request, response: Response) => 
     }
 
     try {
+        const cpfWithoutMasks = cpf.replace(/[^\d]+/g, "");
+
         const userAlreadyExist = await prisma.user.findUnique({
             where: {
-                cpf,
+                cpf: cpfWithoutMasks,
             },
         });
 
@@ -34,7 +36,6 @@ export const SignupController = async (request: Request, response: Response) => 
         }
 
         const hashPassword = await bcrypt.hash(password, 10);
-        const cpfWithoutMasks = cpf.replace(/[^\d]+/g, "");
 
         const newUser = await prisma.user.create({
             data: {
