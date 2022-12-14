@@ -14,6 +14,14 @@ interface ISignupRequestBody {
 export const SignupController = async (request: Request, response: Response) => {
     const { cpf, password, fullname }: ISignupRequestBody = request.body;
 
+    if (!isValidCPF(cpf)) {
+        return response.status(401).json({ signup: false, message: "Invalid CPF" });
+    }
+
+    if (!cpf || !password || !fullname) {
+        return response.status(401).json({ signup: false, message: "U can't send data empty to signup." });
+    }
+
     try {
         const userAlreadyExist = await prisma.user.findUnique({
             where: {
@@ -26,14 +34,6 @@ export const SignupController = async (request: Request, response: Response) => 
         }
     } catch (error) {
         throw new Error();
-    }
-
-    if (!isValidCPF(cpf)) {
-        return response.status(401).json({ signup: false, message: "Invalid CPF" });
-    }
-
-    if (!cpf || !password || !fullname) {
-        return response.status(401).json({ signup: false, message: "U can't send data empty to signup." });
     }
 
     try {
