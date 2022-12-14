@@ -40,7 +40,7 @@ export const SignupController = async (request: Request, response: Response) => 
         const hashPassword = await bcrypt.hash(password, 10);
         const cpfWithoutMasks = cpf.replace(/[^\d]+/g, "");
 
-        const user = await prisma.user.create({
+        const newUser = await prisma.user.create({
             data: {
                 cpf: cpfWithoutMasks,
                 fullname,
@@ -51,7 +51,7 @@ export const SignupController = async (request: Request, response: Response) => 
         const accountUser = await prisma.account.create({
             data: {
                 balance: 0,
-                userId: user.id,
+                userId: newUser.id,
             },
         });
 
