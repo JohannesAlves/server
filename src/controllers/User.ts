@@ -32,11 +32,7 @@ export const SignupController = async (request: Request, response: Response) => 
         if (userAlreadyExist) {
             return response.status(401).json({ signup: false, message: "user already exist" });
         }
-    } catch (error) {
-        throw new Error();
-    }
 
-    try {
         const hashPassword = await bcrypt.hash(password, 10);
         const cpfWithoutMasks = cpf.replace(/[^\d]+/g, "");
 
