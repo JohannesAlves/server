@@ -31,6 +31,8 @@ export const SignupController = async (request: Request, response: Response) => 
                 userId: user.id,
             },
         });
+
+        return response.status(201).json({ signup: true, message: "Account created sucessful!" });
     } catch (error) {
         return console.log(error);
     }
