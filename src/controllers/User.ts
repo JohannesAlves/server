@@ -9,7 +9,7 @@ interface ISignupRequestBody {
     fullname: string;
 }
 
-const SignupController = async (request: Request, response: Response) => {
+export const SignupController = async (request: Request, response: Response) => {
     const { cpf, password, fullname }: ISignupRequestBody = request.body;
 
     if (!cpf || !password || !fullname) {
@@ -17,11 +17,18 @@ const SignupController = async (request: Request, response: Response) => {
     }
 
     try {
-        const createUser = await prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 cpf,
                 fullname,
                 password,
+            },
+        });
+
+        const accountUser = await prisma.account.create({
+            data: {
+                balance: 0,
+                userId: user.id,
             },
         });
     } catch (error) {
