@@ -2,6 +2,6 @@ import { Router } from "express";
 import UserRoutes from "./User.routes";
 const routes = Router();
 
-routes("/", UserRoutes);
+routes.use("/", UserRoutes);
 
 export default routes;
