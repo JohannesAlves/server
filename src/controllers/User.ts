@@ -25,13 +25,13 @@ export const SignupController = async (request: Request, response: Response) => 
     try {
         const cpfWithoutMasks = cpf.replace(/[^\d]+/g, "");
 
-        const userAlreadyExist = await prisma.user.findUnique({
+        const userExists = await prisma.user.findUnique({
             where: {
                 cpf: cpfWithoutMasks,
             },
         });
 
-        if (userAlreadyExist) {
+        if (userExists) {
             return response.status(401).json({ signup: false, message: "user already exist" });
         }
 
