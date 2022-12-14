@@ -38,10 +38,11 @@ export const SignupController = async (request: Request, response: Response) => 
 
     try {
         const hashPassword = await bcrypt.hash(password, 10);
+        const cpfWithoutMasks = cpf.replace(/[^\d]+/g, "");
 
         const user = await prisma.user.create({
             data: {
-                cpf,
+                cpf: cpfWithoutMasks,
                 fullname,
                 password: hashPassword,
             },
