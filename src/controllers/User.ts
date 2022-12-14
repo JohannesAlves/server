@@ -22,9 +22,9 @@ export const SignupController = async (request: Request, response: Response) => 
         return response.status(401).json({ signup: false, message: "U can't send data empty to signup." });
     }
 
-    const hashPassword = bcrypt.hashSync(password, 10);
-
     try {
+        const hashPassword = await bcrypt.hash(password, 10);
+
         const user = await prisma.user.create({
             data: {
                 cpf,
