@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { isValidCPF } from "../utils/isValidCPF";
+import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
@@ -21,12 +22,14 @@ export const SignupController = async (request: Request, response: Response) => 
         return response.status(401).json({ signup: false, message: "U can't send data empty to signup." });
     }
 
+    const hashPassword = bcrypt.hashSync(password, 10);
+
     try {
         const user = await prisma.user.create({
             data: {
                 cpf,
                 fullname,
-                password,
+                password: hashPassword,
             },
         });
 
