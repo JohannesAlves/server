@@ -45,14 +45,16 @@ export const SignupController = async (request: Request, response: Response) => 
             },
         });
 
-        const accountUser = await prisma.account.create({
+        const newAccount = await prisma.account.create({
             data: {
                 balance: 0,
                 userId: newUser.id,
             },
         });
 
-        return response.status(201).json({ signup: true, message: "Account created sucessful!" });
+        return response
+            .status(201)
+            .json({ signup: true, message: "Account created sucessful!", accountId: newAccount.accountId });
     } catch (error) {
         return console.log(error);
     }
