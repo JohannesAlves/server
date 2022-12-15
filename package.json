@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "ts-node src/config/server.ts",
+        "dev": "ts-node-dev src/config/server.ts --exit-child --watch",
         "build": "tsc"
     },
     "keywords": [],
@@ -27,6 +27,7 @@
         "bcrypt": "^5.1.0",
         "cors": "^2.8.5",
         "express": "^4.18.2",
-        "ts-node": "^10.9.1"
+        "ts-node": "^10.9.1",
+        "ts-node-dev": "^2.0.0"
     }
 }
