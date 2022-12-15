@@ -71,8 +71,12 @@ export const SignupController = async (request: Request, response: Response) => 
 export const LoginController = async (request: Request, response: Response) => {
     const { cpf, password }: ILoginControllerRequestBody = request.body;
 
+    if (!cpf || !password) {
+        return response.status(401).json({ auth: false, message: "U can't send data empty." });
+    }
+
     if (!isValidCPF(cpf)) {
-        return response.status(403).json({ message: "Invalid CPF!" });
+        return response.status(401).json({ auth: false, message: "Invalid CPF!" });
     }
 
     try {
