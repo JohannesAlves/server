@@ -5,10 +5,18 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
+type cpf = string;
+type password = string;
+
 interface ISignupRequestBody {
-    cpf: string;
-    password: string;
+    cpf: cpf;
+    password: password;
     fullname: string;
+}
+
+interface ILoginControllerRequestBody {
+    cpf: cpf;
+    password: password;
 }
 
 export const SignupController = async (request: Request, response: Response) => {
@@ -57,5 +65,38 @@ export const SignupController = async (request: Request, response: Response) => 
             .json({ signup: true, message: "Account created sucessful!", accountId: newAccount.accountId });
     } catch (error) {
         return console.log(error);
+    }
+};
+
+export const LoginController = async (request: Request, response: Response) => {
+    const { cpf, password }: ILoginControllerRequestBody = request.body;
+
+    if (!isValidCPF(cpf)) {
+        return response.status(403).json({ message: "Invalid CPF!" });
+    }
+
+    try {
+        const cpfWithoutMasks = cpf.replace(/[^\d]+/g, "");
+
+        const user = await prisma.user.findFirst({
+            where: {
+                cpf: cpfWithoutMasks,
+                password,
+            },
+        });
+
+        if (!user) {
+            return response.status(404).json({ auth: false, message: "incorrect data." });
+        }
+
+        const passwordMatch = bcrypt.compareSync(password, user.password);
+
+        if (!passwordMatch) {
+            return response.status(400).json({ auth: false, message: "incorrect data." });
+        } else {
+            return response.status(200).json({ auth: true, message: "auth sucessful" });
+        }
+    } catch (error) {
+        throw new Error();
     }
 };
