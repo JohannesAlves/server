@@ -81,7 +81,6 @@ export const LoginController = async (request: Request, response: Response) => {
         const user = await prisma.user.findFirst({
             where: {
                 cpf: cpfWithoutMasks,
-                password,
             },
         });
 
