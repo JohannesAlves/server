@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
 import { isValidCPF } from "../utils/isValidCPF";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
@@ -97,7 +98,13 @@ export const LoginController = async (request: Request, response: Response) => {
         if (!passwordMatch) {
             return response.status(400).json({ auth: false, message: "incorrect data." });
         } else {
-            return response.status(200).json({ auth: true, message: "auth sucessful" });
+            const token = jwt.sign({ user: user.id }, "SECRET_KEY", {
+                expiresIn: "2 days",
+            });
+
+            return response
+                .status(200)
+                .json({ auth: true, message: "auth sucessful", token: token, fullname: user.fullname });
         }
     } catch (error) {
         throw new Error();
